@@ -14,7 +14,8 @@ export class ChatInboxComponent implements OnInit {
   chatContent: Array<{
     from: string,
     float: string,
-    mssg: string
+    mssg: string,
+    date: Date
   }> = [];
 
   constructor(private socketConnect: SocketConnectionService) { }
@@ -32,22 +33,29 @@ export class ChatInboxComponent implements OnInit {
       this.chatContent.push({
         from: data.from,
         float: 'left',
-        mssg: data.mssg
+        mssg: data.mssg,
+        date: data.date
       });
     });
   }
 
   SendMessage() {
+    const date = new Date();
     const message = this.chatText.value;
+
+    if(message === '') return;
+
     this.chatContent.push({
       from: 'you',
       float: 'right',
-      mssg: message
+      mssg: message,
+      date: date
     });
     this.socketConnect.socket.emit('message', {
       from: 'chaitanya',
       to: '',
-      msg: message
+      mssg: message,
+      date: date
     });
     this.socketConnect.socket.emit('typing', {from: null});
     this.chatText.setValue('');

@@ -1,4 +1,54 @@
-<div id="mario-chat">
+<div class="card border-dark mb-3" id="mario-chat">
+  <div class="card-header"><h5 class="card-title">Chatter-Box</h5></div>
+  <div class="card-body text-primary" id="chat-window">
+    <div id="output">
+      <ul class="list-group list-group-flush">
+        <li
+          *ngFor="let content of chatContent"
+          class="list-group-item"
+        >
+          <div style="float: {{content.float}};" id="content">
+            <strong style="float: {{content.float}};">{{content.from}}</strong><br>
+            <div style="color: black;">
+              {{content.mssg}}
+            </div>
+          </div>
+          <div
+            id="date-time"
+            style="float: {{content.float == 'right' ? 'left' : 'right'}};"
+          >
+            {{content.date | date:'HH:mm:ss dd/MM/yyyy'}}
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div id="feedback"><p><em>{{typingMssg}}</em></p></div>
+  </div>
+
+  <div class="input-group">
+    <input
+      class="form-control"
+      aria-label="textarea"
+      placeholder="Message"
+      (input)="typing()"
+      (keydown.enter)="SendMessage()"
+      [formControl]="chatText"
+    />
+    <div class="input-group-prepend">
+      <button
+        class="btn btn-primary"
+        id="send"
+        type="button"
+        style="width: 55px;"
+        (click)="SendMessage()"
+        [disabled]="chatText.invalid"
+      >
+        <i class="fa fa-send-o" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<!-- <div id="mario-chat">
   <h2>Chatter-Box</h2>
   <div id="chat-window">
       <div id="output">
@@ -27,4 +77,4 @@
     (click)="SendMessage()"
     [disabled]="chatText.invalid"
   >Send</button>
-</div>
+</div> -->
