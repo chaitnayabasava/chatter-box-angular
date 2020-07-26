@@ -1,13 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { SocketConnectionService } from '../services/sockets/socket-connection.service';
+import { Socket } from 'ngx-socket-io';
 
 @Component({
   selector: 'app-chat-inbox',
   templateUrl: './chat-inbox.component.html',
   styleUrls: ['./chat-inbox.component.css']
 })
-export class ChatInboxComponent implements OnInit {
+export class ChatInboxComponent implements OnInit, OnDestroy {
 
   chatText = new FormControl(null, [Validators.required]);
   typingMssg = '';
@@ -18,10 +18,10 @@ export class ChatInboxComponent implements OnInit {
     date: Date
   }> = [];
 
-  constructor(private socketConnect: SocketConnectionService) { }
+  constructor(private socket: Socket) { }
 
   ngOnInit(): void {
-    this.socketConnect.socket.on('typing', (data) => {
+    this.socket.on('typing', (data) => {
       if(data.from === null) {
         this.typingMssg = '';
         return;
@@ -29,7 +29,7 @@ export class ChatInboxComponent implements OnInit {
       this.typingMssg = data.from + ' is typing...'
     })
 
-    this.socketConnect.socket.on('message', (data) => {
+    this.socket.on('message', (data) => {
       this.chatContent.push({
         from: data.from,
         float: 'left',
@@ -37,6 +37,10 @@ export class ChatInboxComponent implements OnInit {
         date: data.date
       });
     });
+  }
+
+  ngOnDestroy() {
+    this.socket.disconnect();
   }
 
   SendMessage() {
@@ -51,19 +55,19 @@ export class ChatInboxComponent implements OnInit {
       mssg: message,
       date: date
     });
-    this.socketConnect.socket.emit('message', {
+    this.socket.emit('message', {
       from: 'chaitanya',
       to: '',
       mssg: message,
       date: date
     });
-    this.socketConnect.socket.emit('typing', {from: null});
+    this.socket.emit('typing', {from: null});
     this.chatText.setValue('');
   }
 
   typing() {
     const name = (this.chatText.value !== '') ? 'chaitanya' : null;
-    this.socketConnect.socket.emit('typing', {from: name});
+    this.socket.emit('typing', {from: name});
   }
 
 }

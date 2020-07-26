@@ -1,5 +1,5 @@
 <div class="card border-dark mb-3" id="mario-chat">
-  <div class="card-header"><h5 class="card-title">Chatter-Box</h5></div>
+  <div class="card-header"><h5 class="card-title">....</h5></div>
   <div class="card-body text-primary" id="chat-window">
     <div id="output">
       <ul class="list-group list-group-flush">
@@ -48,33 +48,3 @@
     </div>
   </div>
 </div>
-<!-- <div id="mario-chat">
-  <h2>Chatter-Box</h2>
-  <div id="chat-window">
-      <div id="output">
-        <ul style="list-style: none;">
-          <li *ngFor="let content of chatContent">
-            <div style="float: {{content.float}};" id="content">
-              <strong>{{content.from}}</strong><br>
-              <div>
-                {{content.mssg}}
-              </div>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div id="feedback"><p><em>{{typingMssg}}</em></p></div>
-  </div>
-  <input
-    id="message"
-    type="text"
-    placeholder="Message"
-    (input)="typing()"
-    [formControl]="chatText"
-  />
-  <button
-    id="send"
-    (click)="SendMessage()"
-    [disabled]="chatText.invalid"
-  >Send</button>
-</div> -->

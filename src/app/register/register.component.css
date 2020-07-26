@@ -1,0 +1,52 @@
+.signup-form {
+    width: 400px;
+    margin: 0 auto;
+    padding: 30px 0;
+}
+
+form {
+  display: block;
+  margin-top: 0em;
+}
+
+.signup-form form {
+  border-radius: 3px;
+  margin-bottom: 15px;
+  background: #fff;
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
+  padding: 30px;
+}
+
+.signup-form .fa-check {
+  color: #fff;
+  left: 17px;
+  top: 18px;
+  font-size: 7px;
+  position: absolute;
+}
+
+.input-group {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  width: 100%;
+}
+
+.input-group-prepend {
+  margin-right: -1px;
+  display: flex;
+}
+
+.signup-form .btn, .signup-form .btn:active {
+  font-size: 16px;
+  font-weight: bold;
+  background: #1969aa !important;
+  border: none;
+  min-width: 140px;
+}
+
+.signup-form a {
+  color: #1969aa !important;
+  text-decoration: underline;
+}
