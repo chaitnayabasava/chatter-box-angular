@@ -1,3 +1,4 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
@@ -18,13 +19,25 @@ export class LoginComponent implements OnInit {
     ])
   });
 
-  constructor() { }
+  constructor(private httpClient: HttpClient) { }
 
   ngOnInit(): void {
   }
 
   formSubmit() {
-    console.log(this.loginForm);
+    const values = this.loginForm.value;
+    const data = {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      confirm_password: values.conPassword
+    };
+
+    const headers = new HttpHeaders()
+          .set('Content-Type', 'application/json');
+
+    this.httpClient.post("http://localhost:3000/login", JSON.stringify(data), {headers: headers})
+    .subscribe(data => console.log(data), err => console.log(err.error.message));
   }
 
 }

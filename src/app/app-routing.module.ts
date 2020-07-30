@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { ChatInboxComponent } from './chat-inbox/chat-inbox.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-
+import { CheckAuthService } from './services/check_auth/check-auth.service';
 
 const routes: Routes = [
   {
@@ -14,6 +15,12 @@ const routes: Routes = [
     path: 'login',
     component: LoginComponent,
     pathMatch: "full"
+  },
+  {
+    path: 'chat',
+    component: ChatInboxComponent,
+    pathMatch: "full",
+    canActivate: [CheckAuthService]
   }
 ];
 

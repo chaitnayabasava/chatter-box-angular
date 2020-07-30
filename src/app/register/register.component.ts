@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { HttpClient, HttpHeaders } from  '@angular/common/http';
 
 @Component({
   selector: 'app-register',
@@ -30,12 +31,24 @@ export class RegisterComponent implements OnInit {
     'conPassword': new FormControl(null)
   }, [this.passwordsCheck]);
 
-  constructor() { }
+  constructor(private httpClient: HttpClient) { }
 
   ngOnInit(): void {
   }
 
   formSubmit() {
-    console.log(this.registerForm);
+    const values = this.registerForm.value;
+    const data = {
+      username: values.username,
+      email: values.email,
+      password: values.password,
+      confirm_password: values.conPassword
+    };
+
+    const headers = new HttpHeaders()
+          .set('Content-Type', 'application/json');
+
+    this.httpClient.post("http://localhost:3000/register", JSON.stringify(data), {headers: headers})
+    .subscribe(data => console.log(data), err => console.log(err.error.message));
   }
 }
