@@ -4,6 +4,9 @@
     <p>Already have an account?
       <a routerLink="/login">Login here</a></p>
     <hr>
+    <div *ngIf="errorMssg" class="alert alert-danger" role="alert">
+      {{errorMssg}}
+    </div>
     <div class="form-group">
       <div class="input-group">
         <div class="input-group-prepend">

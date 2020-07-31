@@ -1,6 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
+import * as secret from '../secret.json';
 
 @Component({
   selector: 'app-login',
@@ -19,9 +22,15 @@ export class LoginComponent implements OnInit {
     ])
   });
 
-  constructor(private httpClient: HttpClient) { }
+  errorMssg: string = null;
+
+  constructor(private httpClient: HttpClient, private router: Router) { }
 
   ngOnInit(): void {
+    if(localStorage.getItem('auth_token')) {
+      this.router.navigate(['chat']);
+      return;
+    }
   }
 
   formSubmit() {
@@ -33,11 +42,13 @@ export class LoginComponent implements OnInit {
       confirm_password: values.conPassword
     };
 
-    const headers = new HttpHeaders()
-          .set('Content-Type', 'application/json');
-
-    this.httpClient.post("http://localhost:3000/login", JSON.stringify(data), {headers: headers})
-    .subscribe(data => console.log(data), err => console.log(err.error.message));
+    this.httpClient.post<any>(secret.backend + "/login", JSON.stringify(data))
+    .subscribe(result => {
+      localStorage.setItem('auth_token', result.auth_token);
+      this.router.navigate(['chat']);
+    }, err => {
+      this.errorMssg = err.error.message;
+    });
   }
 
 }
