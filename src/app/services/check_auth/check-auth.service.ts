@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 import * as secret from '../../secret.json';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -24,13 +25,16 @@ export class CheckAuthService implements CanActivate{
       }),
       catchError((err) => {
         console.log(err.error.message);
-        if(err.error.message == "jwt expired") localStorage.removeItem('auth_token');
+        if(err.error.message == "jwt expired") this.auth.clearAuth();
         this.router.navigate(['login']);
         return of(false);
       })
     );
   }
 
-  constructor(private http: HttpClient, private router: Router) { }
-  // constructor(private router: Router) { }
+  constructor(
+              private http: HttpClient,
+              private router: Router,
+              private auth: AuthService
+            ) { }
 }

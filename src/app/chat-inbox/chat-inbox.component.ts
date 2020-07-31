@@ -56,18 +56,18 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
       date: date
     });
     this.socket.emit('message', {
-      from: 'chaitanya',
+      from: localStorage.getItem('user_id'),
       to: '',
       mssg: message,
       date: date
     });
-    this.socket.emit('typing', {from: null});
+    this.socket.emit('typing', {from: null, to: null});
     this.chatText.setValue('');
   }
 
   typing() {
-    const name = (this.chatText.value !== '') ? 'chaitanya' : null;
-    this.socket.emit('typing', {from: name});
+    const name = (this.chatText.value !== '') ? localStorage.getItem('username') : null;
+    this.socket.emit('typing', {from: name, to: ''});
   }
 
 }

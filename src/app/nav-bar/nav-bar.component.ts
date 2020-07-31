@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth/auth.service';
 
 @Component({
   selector: 'app-nav-bar',
@@ -10,13 +11,13 @@ export class NavBarComponent implements OnInit {
 
   ls: Storage = localStorage;
 
-  constructor() { }
+  constructor(private auth: AuthService) { }
 
   ngOnInit(): void {
   }
 
   logout() {
-    localStorage.removeItem('auth_token');
+    this.auth.clearAuth();
   }
 
 }

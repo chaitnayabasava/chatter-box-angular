@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 
+import { AuthService } from '../services/auth/auth.service';
 import * as secret from '../secret.json';
 
 @Component({
@@ -24,12 +24,11 @@ export class LoginComponent implements OnInit {
 
   errorMssg: string = null;
 
-  constructor(private httpClient: HttpClient, private router: Router) { }
+  constructor(private httpClient: HttpClient, private auth: AuthService) { }
 
   ngOnInit(): void {
     if(localStorage.getItem('auth_token')) {
-      this.router.navigate(['chat']);
-      return;
+      this.auth.navigateChat();
     }
   }
 
@@ -44,8 +43,7 @@ export class LoginComponent implements OnInit {
 
     this.httpClient.post<any>(secret.backend + "/login", JSON.stringify(data))
     .subscribe(result => {
-      localStorage.setItem('auth_token', result.auth_token);
-      this.router.navigate(['chat']);
+      this.auth.authConfirmed(result);
     }, err => {
       this.errorMssg = err.error.message;
     });
