@@ -9,20 +9,24 @@ import { AuthInterceptorService } from './services/authInterceptor/auth-intercep
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { ChatInboxComponent } from './chat-inbox/chat-inbox.component';
+import { ChatInboxComponent } from './chat/chat-inbox/chat-inbox.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
+import { ChatComponent } from './chat/chat/chat.component';
+import { ChatListComponent } from './chat/chat-list/chat-list.component';
 
 const config: SocketIoConfig = {url: 'http://localhost:3000', options: {}};
 
 @NgModule({
   declarations: [
     AppComponent,
-    ChatInboxComponent,
     NavBarComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    ChatComponent,
+    ChatInboxComponent,
+    ChatListComponent
   ],
   imports: [
     BrowserModule,
