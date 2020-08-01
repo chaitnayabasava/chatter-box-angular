@@ -1,6 +1,7 @@
 <div class="card border-dark mb-3" id="mario-chat">
   <div class="card-header">
-    <h5 class="card-title">....</h5>
+    <h5 class="card-title" *ngIf="!toUser">Select a user to chat with...</h5>
+    <h5 class="card-title" *ngIf="toUser">{{toUser.username}}</h5>
   </div>
   <div class="card-body text-primary" id="chat-window">
     <div id="output">
@@ -43,7 +44,7 @@
         type="button"
         style="width: 55px;"
         (click)="SendMessage()"
-        [disabled]="chatText.invalid"
+        [disabled]="chatText.invalid || toUser === null"
       >
         <i class="fa fa-send-o" aria-hidden="true"></i>
       </button>

@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Socket } from 'ngx-socket-io';
+import { Subscription } from 'rxjs';
+import { ChatService } from '../services/chat/chat.service';
 
 @Component({
   selector: 'app-chat-inbox',
@@ -9,6 +11,8 @@ import { Socket } from 'ngx-socket-io';
 })
 export class ChatInboxComponent implements OnInit, OnDestroy {
 
+  toUser = null;
+  chatSub: Subscription;
   chatText = new FormControl(null, [Validators.required]);
   typingMssg = '';
   chatContent: Array<{
@@ -18,9 +22,11 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
     date: Date
   }> = [];
 
-  constructor(private socket: Socket) { }
+  constructor(private socket: Socket, private chatService: ChatService) { }
 
   ngOnInit(): void {
+    this.chatSub = this.chatService.chatSelectedSubject.subscribe(data => this.toUser = data);
+
     this.socket.on('typing', (data) => {
       if(data.from === null) {
         this.typingMssg = '';
@@ -44,6 +50,7 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
   }
 
   SendMessage() {
+    console.log(this.toUser)
     const date = new Date();
     const message = this.chatText.value;
 
