@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ChatInboxComponent } from './chat/chat-inbox/chat-inbox.component';
-import { ChatComponent } from './chat/chat/chat.component';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { CheckAuthService } from './services/check_auth/check-auth.service';
+
+import { ChatModule } from "./chat/chat.module";
 
 const routes: Routes = [
   {
@@ -19,9 +18,7 @@ const routes: Routes = [
   },
   {
     path: 'chat',
-    component: ChatComponent,
-    pathMatch: "full",
-    canActivate: [CheckAuthService]
+    loadChildren: () => ChatModule //'./chat/chat.module#ChatModule'
   }
 ];
 
