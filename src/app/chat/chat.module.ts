@@ -7,6 +7,7 @@ import { ChatComponent } from "./chat/chat.component";
 import  { ChatInboxComponent } from "./chat-inbox/chat-inbox.component";
 import  { ChatListComponent } from "./chat-list/chat-list.component";
 import { CheckAuthService } from "../services/check_auth/check-auth.service";
+import { ChatRecentsService } from "./services/recents/chat-recents.service";
 
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
@@ -17,7 +18,8 @@ const routes: Routes = [
     path: '',
     component: ChatComponent,
     pathMatch: "full",
-    canActivate: [CheckAuthService]
+    canActivate: [CheckAuthService],
+    resolve: { 'recents': ChatRecentsService }
   }
 ];
 

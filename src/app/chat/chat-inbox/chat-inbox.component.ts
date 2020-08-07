@@ -12,6 +12,8 @@ import { ChatService } from '../services/chat/chat.service';
 export class ChatInboxComponent implements OnInit, OnDestroy {
 
   toUser = null;
+  user = null;
+  firstMssg: boolean;
   chatSub: Subscription;
   chatText = new FormControl(null, [Validators.required]);
   typingMssg = '';
@@ -25,19 +27,28 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
   constructor(private socket: Socket, private chatService: ChatService) { }
 
   ngOnInit(): void {
-    this.chatSub = this.chatService.chatSelectedSubject.subscribe(data => this.toUser = data);
+    this.chatSub = this.chatService.chatSelectedSubject.subscribe(data => {
+      this.toUser = data;
+      this.firstMssg = true;
+    });
+    this.user = {
+      _id: localStorage.getItem('user_id'),
+      username: localStorage.getItem('username')
+    };
+
+    this.socket.emit('established', this.user._id);
 
     this.socket.on('typing', (data) => {
       if(data.from === null) {
         this.typingMssg = '';
         return;
       }
-      this.typingMssg = data.from + ' is typing...'
+      this.typingMssg = data.from.username + ' is typing...'
     })
 
     this.socket.on('message', (data) => {
       this.chatContent.push({
-        from: data.from,
+        from: data.from.username,
         float: 'left',
         mssg: data.mssg,
         date: data.date
@@ -46,15 +57,20 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.socket.emit('closed', this.user._id);
     this.socket.disconnect();
   }
 
   SendMessage() {
-    console.log(this.toUser)
+    console.log(this.firstMssg);
     const date = new Date();
     const message = this.chatText.value;
 
     if(message === '') return;
+    if(this.firstMssg) {
+      this.socket.emit('new-connect', {from: this.user, to: this.toUser});
+      this.firstMssg = false;
+    }
 
     this.chatContent.push({
       from: 'you',
@@ -62,19 +78,20 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
       mssg: message,
       date: date
     });
+
     this.socket.emit('message', {
-      from: localStorage.getItem('user_id'),
-      to: '',
+      from: this.user,
+      to: this.toUser,
       mssg: message,
       date: date
     });
-    this.socket.emit('typing', {from: null, to: null});
+    this.socket.emit('typing', {from: null, to: this.toUser});
     this.chatText.setValue('');
   }
 
   typing() {
-    const name = (this.chatText.value !== '') ? localStorage.getItem('username') : null;
-    this.socket.emit('typing', {from: name, to: ''});
+    const from = (this.chatText.value !== '') ? this.user : null;
+    this.socket.emit('typing', {from: from, to: this.toUser});
   }
 
 }

@@ -1,4 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Data } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { ChatService } from '../services/chat/chat.service';
@@ -18,11 +19,12 @@ export class ChatListComponent implements OnInit, OnDestroy {
   listSub: Subscription;
   selectedId: string = null;
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService, private activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
     this.showList = []
     this.listSub = this.chatService.listSubject.subscribe(data => this.showList = data);
+    this.activatedRoute.data.subscribe((data: Data) => this.showList = data.recents.data)
   }
 
   ngOnDestroy() {
