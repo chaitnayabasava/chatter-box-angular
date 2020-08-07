@@ -19,6 +19,10 @@ const routes: Routes = [
   {
     path: 'chat',
     loadChildren: () => ChatModule //'./chat/chat.module#ChatModule'
+  },
+  {
+    path: '**',
+    redirectTo: 'chat'
   }
 ];
 
