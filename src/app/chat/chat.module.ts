@@ -16,10 +16,19 @@ import * as secret from "../secret.json";
 const routes: Routes = [
   {
     path: '',
-    component: ChatComponent,
-    pathMatch: "full",
     canActivate: [CheckAuthService],
-    resolve: { 'recents': ChatRecentsService }
+    children: [
+      {
+        path: 'inbox',
+        component: ChatComponent,
+        resolve: { 'recents': ChatRecentsService },
+        pathMatch: "full",
+      },
+      {
+        path: '**',
+        redirectTo: 'inbox'
+      }
+    ]
   }
 ];
 

@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Data } from '@angular/router';
+import { ActivatedRoute, Data, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { ChatService } from '../services/chat/chat.service';
@@ -19,7 +19,10 @@ export class ChatListComponent implements OnInit, OnDestroy {
   listSub: Subscription;
   selectedId: string = null;
 
-  constructor(private chatService: ChatService, private activatedRoute: ActivatedRoute) { }
+  constructor(private chatService: ChatService,
+              private activatedRoute: ActivatedRoute,
+              private router: Router
+          ) { }
 
   ngOnInit(): void {
     this.showList = []

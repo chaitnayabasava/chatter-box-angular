@@ -36,6 +36,7 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
       username: localStorage.getItem('username')
     };
 
+    this.socket.connect();
     this.socket.emit('established', this.user._id);
 
     this.socket.on('typing', (data) => {
@@ -57,6 +58,7 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.chatSub.unsubscribe();
     this.socket.emit('closed', this.user._id);
     this.socket.disconnect();
   }
