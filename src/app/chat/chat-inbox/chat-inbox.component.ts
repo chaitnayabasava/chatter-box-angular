@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
-import { Socket } from 'ngx-socket-io';
 import { Subscription } from 'rxjs';
 import { ChatService } from '../services/chat/chat.service';
+import { SocketService } from '../services/socket/socket.service';
+
+import { User } from '../User.model';
 
 @Component({
   selector: 'app-chat-inbox',
@@ -11,8 +13,8 @@ import { ChatService } from '../services/chat/chat.service';
 })
 export class ChatInboxComponent implements OnInit, OnDestroy {
 
-  toUser = null;
-  user = null;
+  toUser: User = null;
+  user: User = null;
   firstMssg: boolean;
   chatSub: Subscription;
   chatText = new FormControl(null, [Validators.required]);
@@ -24,7 +26,7 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
     date: Date
   }> = [];
 
-  constructor(private socket: Socket, private chatService: ChatService) { }
+  constructor(private socketService: SocketService, private chatService: ChatService) { }
 
   ngOnInit(): void {
     this.chatSub = this.chatService.chatSelectedSubject.subscribe(data => {
@@ -36,10 +38,9 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
       username: localStorage.getItem('username')
     };
 
-    this.socket.connect();
-    this.socket.emit('established', this.user._id);
+    this.socketService.newConnect(this.user._id);
 
-    this.socket.on('typing', (data) => {
+    this.socketService.socket.on('typing', (data) => {
       if(data.from === null) {
         this.typingMssg = '';
         return;
@@ -47,7 +48,7 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
       this.typingMssg = data.from.username + ' is typing...'
     })
 
-    this.socket.on('message', (data) => {
+    this.socketService.socket.on('message', (data) => {
       this.chatContent.push({
         from: data.from.username,
         float: 'left',
@@ -59,18 +60,16 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.chatSub.unsubscribe();
-    this.socket.emit('closed', this.user._id);
-    this.socket.disconnect();
+    this.socketService.destroyConnection(this.user._id);
   }
 
   SendMessage() {
-    console.log(this.firstMssg);
     const date = new Date();
     const message = this.chatText.value;
 
     if(message === '') return;
     if(this.firstMssg) {
-      this.socket.emit('new-connect', {from: this.user, to: this.toUser});
+      this.socketService.mssgTyping({from: this.user, to: this.toUser, tag: this.firstMssg});
       this.firstMssg = false;
     }
 
@@ -81,19 +80,14 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
       date: date
     });
 
-    this.socket.emit('message', {
-      from: this.user,
-      to: this.toUser,
-      mssg: message,
-      date: date
-    });
-    this.socket.emit('typing', {from: null, to: this.toUser});
+    this.socketService.sendMssg(this.user, this.toUser, message, date);
+    this.socketService.mssgTyping({from: null, to: this.toUser});
     this.chatText.setValue('');
   }
 
   typing() {
     const from = (this.chatText.value !== '') ? this.user : null;
-    this.socket.emit('typing', {from: from, to: this.toUser});
+    this.socketService.mssgTyping({from: from, to: this.toUser});
   }
 
 }

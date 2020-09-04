@@ -51,6 +51,6 @@ const config: SocketIoConfig = {url: secret.backend, options: {}};
     ChatInboxComponent,
     ChatListComponent,
     RouterModule
-  ]
+  ],
 })
 export class ChatModule { }
