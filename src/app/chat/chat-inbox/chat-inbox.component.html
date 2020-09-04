@@ -33,7 +33,7 @@
       class="form-control"
       aria-label="textarea"
       placeholder="Message"
-      (input)="typing()"
+      (input)="debounceTyping()"
       (keydown.enter)="SendMessage()"
       [formControl]="chatText"
     />
