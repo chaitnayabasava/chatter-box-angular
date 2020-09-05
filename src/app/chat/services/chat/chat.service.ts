@@ -23,6 +23,6 @@ export class ChatService {
       username: string,
       _id: string
     }>>(secret.backend + "/search", {query: query})
-    .subscribe(data => this.listSubject.next(data), err => console.log(err.error.message));
+    .subscribe(data => console.log(data), err => console.log(err.error.message));
   }
 }

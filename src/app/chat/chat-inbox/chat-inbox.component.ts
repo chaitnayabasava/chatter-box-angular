@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { debounce } from 'rxjs/operators';
+import { debounceFunc } from '../../debounce.function';
 import { ChatService } from '../services/chat/chat.service';
 import { SocketService } from '../services/socket/socket.service';
 
@@ -91,17 +91,6 @@ export class ChatInboxComponent implements OnInit, OnDestroy {
     this.socketService.mssgTyping({from: from, to: this.toUser});
   }
 
-  private debounceFunc(func: Function, delay: number) {
-    let timer;
-    return function() {
-      let context = this;
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        func.apply(context);
-      }, delay);
-    }
-  }
-
-  debounceTyping = this.debounceFunc(this.typing, 1000);
+  debounceTyping = debounceFunc(this.typing, 1000, this);
 
 }

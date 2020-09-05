@@ -15,7 +15,7 @@ export class ChatListComponent implements OnInit, OnDestroy {
     username: string,
     _id: string
   }>;
-  @ViewChild('searchInput') searchInput: ElementRef;
+
   listSub: Subscription;
   selectedId: string = null;
 
@@ -37,13 +37,6 @@ export class ChatListComponent implements OnInit, OnDestroy {
   chatSelected(idx: number) {
     this.selectedId = this.showList[idx]._id;
     this.chatService.chatSelectedSubject.next(this.showList[idx]);
-  }
-
-  searchName() {
-    const query = this.searchInput.nativeElement.value;
-
-    if(query == "") return;
-    this.chatService.searchQuery(query);
   }
 
 }

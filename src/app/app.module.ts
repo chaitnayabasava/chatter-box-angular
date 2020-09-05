@@ -10,13 +10,15 @@ import { AppComponent } from './app.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
+import { NavSearchComponent } from './nav-search/nav-search.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavBarComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    NavSearchComponent
   ],
   imports: [
     BrowserModule,
@@ -24,11 +26,13 @@ import { LoginComponent } from './login/login.component';
     HttpClientModule,
     AppRoutingModule
   ],
-  providers: [{
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptorService,
-    multi: true
-  }],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorService,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
